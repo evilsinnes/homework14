@@ -1,5 +1,7 @@
 package org.skypro.skyshop.controller;
 
+import org.skypro.skyshop.exception.NoSuchProductException;
+import org.skypro.skyshop.model.ShopError;
 import org.skypro.skyshop.model.basket.UserBasket;
 import org.skypro.skyshop.model.product.Product;
 import org.skypro.skyshop.service.BasketService;
@@ -27,17 +29,13 @@ public class ShopController {
     }
 
     @GetMapping("/basket/add/{productId}")
-    public ResponseEntity<String> addProductToBasket(@PathVariable UUID productId) {
+    public ResponseEntity<?> addProduct(@PathVariable UUID productId) {
         try {
             String result = basketService.addProduct(productId);
             return ResponseEntity.ok(result);
-        } catch (ResponseStatusException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Ошибка сервера: " + e.getMessage()
-            );
+        } catch (NoSuchProductException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ShopError("PRODUCT_NOT_FOUND", e.getMessage()));
         }
     }
 
