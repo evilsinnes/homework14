@@ -1,10 +1,7 @@
 
-package org.skypro.skyshop.model;
+package org.skypro.skyshop.model.search;
 
-import org.skypro.skyshop.model.search.Searchable;
-import java.util.UUID;
-
-    public class SearchResult {
+public class SearchResult {
         private final String id;
         private final String name;
         private final String contentType;
