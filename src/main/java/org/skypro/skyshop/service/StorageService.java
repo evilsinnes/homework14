@@ -1,5 +1,6 @@
 package org.skypro.skyshop.service;
 
+import org.skypro.skyshop.exception.NoSuchProductException;
 import org.skypro.skyshop.model.article.Article;
 import org.skypro.skyshop.model.product.DiscountedProduct;
 import org.skypro.skyshop.model.product.Product;
@@ -23,18 +24,26 @@ public class StorageService {
     }
 
     private void initTestData() {
-        products.put(UUID.randomUUID(), new SimpleProduct(UUID.randomUUID(), "Яблоко", 50));
-        products.put(UUID.randomUUID(), new DiscountedProduct(UUID.randomUUID(), "Банан", 100, 20));
+        // Создаем UUID один раз для каждого продукта
+        UUID appleId = UUID.randomUUID();
+        UUID bananaId = UUID.randomUUID();
 
+        products.put(appleId, new SimpleProduct(appleId, "Яблоко", 50));
+        products.put(bananaId, new DiscountedProduct(bananaId, "Банан", 100, 20));
 
-        articles.put(UUID.randomUUID(), new Article(UUID.randomUUID(),
+        // Аналогично для статей
+        UUID appleArticleId = UUID.randomUUID();
+        UUID bananaArticleId = UUID.randomUUID();
+
+        articles.put(appleArticleId, new Article(appleArticleId,
                 "Как выбрать яблоки", "Советы по выбору спелых яблок"));
-        articles.put(UUID.randomUUID(), new Article(UUID.randomUUID(),
+        articles.put(bananaArticleId, new Article(bananaArticleId,
                 "Польза бананов", "О полезных свойствах бананов"));
     }
 
     public StorageService() {
         initTestData();
+        //logProducts();
     }
 
 
@@ -45,4 +54,14 @@ public class StorageService {
         return result;
     }
 
+    public Optional<Product> getProductById(UUID id) {
+        Product product = products.get(id);
+        if (product == null) {
+            throw new NoSuchProductException("Product with ID " + id + " not found");
+        }
+        return Optional.of(product);
+    }
+    public boolean productExists(UUID id) {
+        return products.containsKey(id);
+    }
 }

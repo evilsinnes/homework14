@@ -7,9 +7,9 @@ import java.util.UUID;
 
 public abstract class Product implements Searchable {
     private final UUID id;
-    private  final String name;
+    private final String name;
 
-    protected Product(UUID id, String name){
+    protected Product(UUID id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -23,9 +23,17 @@ public abstract class Product implements Searchable {
     public String getName() {
         return name;
     }
+
     @JsonIgnore
     @Override
     public String getContentType() {
         return "PRODUCT";
+    }
+
+    public abstract int getPrice();
+
+    @Override
+    public String getSearchTerm() {
+        return getName();
     }
 }
